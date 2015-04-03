@@ -8,8 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:klorenz/character-table"
+    "url": "git@github.com:klorenz/atom-character-table"
   },
+  "author": "Kay-Uwe (Kiwi) Lorenz <kiwi@franka.dyndns.org>",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
