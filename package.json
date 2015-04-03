@@ -2,13 +2,13 @@
   "name": "character-table",
   "main": "./lib/character-table",
   "version": "0.0.0",
-  "description": "A short description of your package",
+  "description": "Lookup and insert unicode characters in select view",
   "activationCommands": {
     "atom-workspace": "character-table:toggle"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:klorenz/atom-character-table.git"
+    "url": "git@github.com:klorenz/atom-character-table"
   },
   "author": "Kay-Uwe (Kiwi) Lorenz <kiwi@franka.dyndns.org>",
   "license": "MIT",
