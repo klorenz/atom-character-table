@@ -1,0 +1,44 @@
+// The ui-variables file is provided by base themes provided by Atom.
+//
+// See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
+// for a full listing of what's available.
+@import "ui-variables";
+
+.character-table {
+  vertical-align: top;
+
+  .ct-char {
+    font-size: 300%;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    text-align: center;
+    border: 1px solid @text-color;
+    padding: 0.1em;
+    padding-top: 0.3em;
+    margin: 0.1em;
+    vertical-align: center;
+  }
+
+  .ct-info {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 1.3em;
+    padding-left: 0.5em;
+
+    .ct-codepoint {
+      font-size: 80%;
+    }
+    .ct-mnemonic {
+      font-size: 80%;
+    }
+    .ct-name {
+    }
+
+    // force ct-name on new line
+    .ct-name:before{
+      content: '\a' ;
+      white-space: pre;
+    }
+  }
+}

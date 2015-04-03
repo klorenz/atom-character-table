@@ -1,0 +1,17 @@
+{
+  "name": "character-table",
+  "main": "./lib/character-table",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationCommands": {
+    "atom-workspace": "character-table:toggle"
+  },
+  "repository": "https://github.com/atom/character-table",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+    "atom-space-pen-views": ">=2.0.0"
+  }
+}
