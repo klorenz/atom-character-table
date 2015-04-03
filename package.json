@@ -6,10 +6,7 @@
   "activationCommands": {
     "atom-workspace": "character-table:toggle"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:klorenz/atom-character-table"
-  },
+  "repository": "https://github.com/klorenz/atom-character-table",
   "author": "Kay-Uwe (Kiwi) Lorenz <kiwi@franka.dyndns.org>",
   "license": "MIT",
   "engines": {
