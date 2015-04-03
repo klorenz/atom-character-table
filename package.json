@@ -1,7 +1,7 @@
 {
   "name": "character-table",
   "main": "./lib/character-table",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Lookup and insert unicode characters in select view",
   "activationCommands": {
     "atom-workspace": "character-table:toggle"
