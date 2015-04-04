@@ -6,6 +6,10 @@ module.exports = CharacterTable =
   modalPanel: null
   subscriptions: null
 
+  configDefaults:
+    enableDigraphs: false
+    digraphKey: "ctrl-k"
+
   activate: (state) ->
     @characterTableView = new CharacterTableView(state.characterTableViewState)
 
