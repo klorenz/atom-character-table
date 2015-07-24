@@ -1,6 +1,8 @@
 {SelectListView, $$} = require "atom-space-pen-views"
 {CompositeDisposable} = require "atom"
 Q = require "q"
+path = require "path"
+fs = require "fs"
 
 slugify = (s) ->
   s.replace(/[^A-Za-z0-9_]/g, "-").toLowerCase()
