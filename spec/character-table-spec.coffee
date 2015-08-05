@@ -8,6 +8,7 @@ CharacterTable = require '../lib/character-table'
 describe "CharacterTable", ->
   [workspaceElement, activationPromise] = []
 
+
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
     activationPromise = atom.packages.activatePackage('character-table')

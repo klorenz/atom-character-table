@@ -1,5 +1,6 @@
 {SelectListView, $$} = require "atom-space-pen-views"
 {CompositeDisposable} = require "atom"
+{CharacterData} = require "./character-data.coffee"
 Q = require "q"
 path = require "path"
 fs = require "fs"
@@ -9,136 +10,104 @@ slugify = (s) ->
 
 module.exports =
 class CharacterTableView extends SelectListView
+
   initialize: ->
     super
     @addClass "character-table"
     @setMaxItems 100
-    @loadCharacters().then (chardata) =>
-      @characterData = chardata
-      @setItems @characterData
-      @mnemonics = {}
+    @updateDelay = 1000
+    @updating = false
+    @needUpdate = false
 
-      if atom.config.get('character-table.enableDigraphs')
-        @enableDigraphs()
+    @characterData = new CharacterData()
 
-      atom.config.onDidChange 'character-table.enableDigraphs', ({newValue,oldValue}) =>
-        console.log "onDidChange", newValue, oldValue
-        if newValue
-          @enableDigraphs()
-        else
-          @disableDigraphs()
+    @characterData.initialized.then =>
 
-    # @css "width", "30em"
+      @setItems @characterData.getAll()
+
+      if atom.config.get('character-table.enableCharacterMnemonics')
+        @updateMnemonics()
+
+      atom.config.onDidChange 'character-table.enableCharacterMnemonics', ({newValue,oldValue}) =>
+        @updateMnemonics()
+
+      # do this delayed
+      atom.config.onDidChange 'character-table.mnemonicMnemonicMatch', ({newValue, oldValue}) =>
+        @delayedUpdateMnemonics()
+
+      atom.config.onDidChange 'character-table.mnemonicCharacterNameMatch', ({newValue, oldValue}) =>
+        @delayedUpdateMnemonics()
+
+      atom.config.onDidChange 'character-table.mnemonicKey', ({newValue, oldValue}) =>
+        @delayedUpdateMnemonics()
+
+
+
+  # change event happens on keystroke, so we delay the updating a second
+  delayedUpdateMnemonics: ->
+    if @updateScheduled
+      @updateScheduled = clearTimeout @updateScheduled
+
+    doUpdate = =>
+      @updateMnemonics()
+      @updateScheduled = null
+
+    @updateScheduled = setTimeout doUpdate, @updateDelay
+
     # @css "max-width", "30em"
     # @css "min-width", "30em"
     # # Create root element
     # @element = document.createElement('div')
     # @element.classList.add('character-table')
-    #
+    #⌂
     # # Create message element
     # message = document.createElement('div')
     # message.textContent = "The CharacterTable package is Alive! It's ALIVE!"
     # message.classList.add('message')
     # @element.appendChild(message)
+  updateMnemonics: ->
+    if @updating
+      @needUpdate = true
+      return
 
-  enableDigraphs: ->
-    #workspaceView = atom.views.getView(atom.workspace)
-    #workspaceView.addClass('character-table-digraphs')
+    @disableMnemonics()
+    if atom.config.get('character-table.enableCharacterMnemonics')
+      @enableMnemonics()
 
-    @digraphs = new CompositeDisposable
+    @updating = false
+    if @needUpdate
+      @updateMnemonics()
 
-    digraphKey = atom.config.get('character-table.digraphKey')
+  enableMnemonics: ->
+    mnemonicRegex = atom.config.get 'character-table.mnemonicMnemonicMatch'
+    charNameRegex = atom.config.get 'character-table.mnemonicCharacterNameMatch'
+    allowReversed = atom.config.get 'character-table.mnemonicAllowReversed'
 
-    keymap = {}
+    if mnemonicRegex
+      mnemonicRegex = new RegExp mnemonicMatch
 
-    lastIndex = @characterData.length - 1
+    if charNameRegex
+      charNameRegex = charNameRegex.replace(/\s*,\s*/g, '|').replace(/\s+/g, '.*')
+      charNameRegex = new RegExp charNameRegex, "i"
 
-    @characterData.forEach (item,i) =>
-      if item.mnemonic
-        [char1, char2] = item.mnemonic.split("")
-        reverse_mnemonic = char2+char1
-        if reverse_mnemonic of @mnemonics
-          reverse_mnemonic = null
-        slugname = slugify(item.name)
-        commandName = "character-table:insert-#{slugname}"
-        @digraphs.add atom.commands.add "atom-workspace", commandName, =>
-          atom.workspace.getActiveEditor().insertText item.char
+    @mnemonics = new CompositeDisposable
 
-        if char1 is " "
-          char1 = "space"
-        if char2 is " "
-          char2 = "space"
+    @characterData.setupMnemonics
+      mnemonicRegex: mnemonicRegex
+      charNameRegex: charNameRegex
+      allowReversed: allowReversed
 
-        keymap["#{digraphKey} #{char1} #{char2}"] = commandName
+      digraphKey: atom.config.get('character-table.mnemonicKey')
 
-        if reverse_mnemonic?
-          keymap["#{digraphKey} #{char2} #{char1}"] = commandName
+      addCommand: (commandName, item) =>
+        @mnemonics.add atom.commands.add "atom-workspace", commandName, =>
+          atom.workspace.getActiveTextEditor().insertText item.char
 
-      if i == lastIndex
-        try
-          @digraphs.add atom.keymaps.add("character-table/digraphs", {"atom-workspace": keymap})
-        catch e
-          console.log e
+      addKeymap: (keymap) =>
+        @mnemonics.add atom.keymaps.add("character-table/mnemonics", {"atom-workspace": keymap})
 
-  disableDigraphs: ->
-    console.log "digraph disabled"
-    @digraphs?.dispose()
-
-  loadCharacters: ->
-    Q.fcall ->
-      rfc1345_data = fs.readFileSync path.resolve __dirname, "..", "rfc1345.txt"
-      unicode_data = fs.readFileSync path.resolve __dirname, "..", "UnicodeData.txt"
-
-      rfc1345_data = rfc1345_data.toString()
-      unicode_data = unicode_data.toString()
-
-      char_data = []
-
-      @mnemonics = {}
-      for line in rfc1345_data.split /\n/
-        continue if line.length < 4
-        continue if line[0] != " "
-        continue if line[1] == " "
-
-        [mnemonic, number, iso_name] = line[1..].split(/\s+/, 2)
-
-        mnemonic += " " if mnemonic.length == 1
-        try
-          char = String.fromCodePoint("0x"+number)
-        catch e
-          console.warn "Error decoding #{number}, #{iso_name}"
-          continue
-
-        @mnemonics[char] = mnemonic
-
-      for line in unicode_data.split /\n/
-        row = line.split /;/
-        [codePoint, name, category] = row[..2]
-
-        unless category
-          console.log "row", row
-          console.log "category evals to false"
-          continue
-        continue if category.match /^C/
-
-        try
-          char = String.fromCodePoint("0x"+codePoint)
-        catch e
-          console.warn "Error decoding #{number}, #{iso_name}"
-          continue
-
-        mnemonic = ""
-        if char of @mnemonics
-          mnemonic = @mnemonics[char]
-
-        codePoint = "U+"+codePoint
-
-        key = "#{codePoint} #{mnemonic} #{name}"
-
-        char_data.push {char, codePoint, mnemonic, name, key}
-
-      char_data
-
+  disableMnemonics: ->
+    @mnemonics?.dispose()
 
   getFilterKey: -> 'key'
 
@@ -146,7 +115,7 @@ class CharacterTableView extends SelectListView
   destroy: ->
     @cancel()
     @panel?.destroy()
-    @disableDigraphs()
+    @disableMnemonics()
 
   viewForItem: ({char, codePoint, mnemonic, name}) ->
     $$ ->
@@ -160,35 +129,34 @@ class CharacterTableView extends SelectListView
           @span class: 'ct-name', name
 
   confirmed: (item) ->
-    @hide()
-    atom.workspace.getActiveEditor().insertText(item.char)
-    @restoreFocus()
+    atom.workspace.getActiveTextEditor().insertText(item.char)
+    @cancelled()
 
   cancelled: ->
     @hide()
     @restoreFocus()
 
-  show: ->
+  showMnemonics: ->
+    @setItems @characterData.getMnemonics()
+    @show()
 
+  showAll: ->
+    @setItems @characterData.getAll()
+    @show()
+
+  show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
 
-    #@list.css("width", "30em")
-  #  debugger
-    #@width(@list.outerWidth())
-
-    #view = atom.views.getView(@panel)
-    #jdebugger
-    #view.width(@list.outerWidth())
+    # @panel.getItem().parent().css
+    #   width: '30em'
+    #   leftMargin: '-15em'
 
     @panel.show()
-
-    console.log @panel
-    console.log @
-
 
     @storeFocusedElement()
 
     @focusFilterEditor()
+
 
   hide: ->
     @panel?.hide()
