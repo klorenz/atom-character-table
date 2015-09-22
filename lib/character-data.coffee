@@ -148,11 +148,12 @@ class CharacterData
       for line in unicode_data.split /\n/
         row = line.split /;/
         [codePoint, name, category] = row[..2]
+        #canonClass, bidiCategory, decomp, decimal,
+        #digit, numeric, unicode1, comment, upperMapping, lowerMapping, titleMapping]
 
         unless category
-          console.log "row", row
-          console.log "category evals to false"
           continue
+
         continue if category.match /^C/
 
         try
