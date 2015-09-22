@@ -1,5 +1,8 @@
+## 0.4.0 - Improve fuzzy search
+* Visualize matched chars, search within fields
+
 ## 0.3.0 - Add Configuration Options
-* added some configuration options to filter mnemonics to speed up atom commands by 
+* added some configuration options to filter mnemonics to speed up atom commands by
   reducing them to needed
 
 ## 0.2.1 - Add Mnemonics Selection
