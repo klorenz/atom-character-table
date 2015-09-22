@@ -8,6 +8,16 @@
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
   },
+  "keywords": [
+    "character",
+    "table",
+    "special",
+    "unicode",
+    "symbol",
+    "glyph",
+    "mnemonic",
+    "digraph"
+  ],
   "dependencies": {
     "atom-space-pen-views": ">=2.0.0",
     "fuzzaldrin": "^2.1.0",
