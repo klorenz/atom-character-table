@@ -160,7 +160,7 @@ class CharacterTableView extends SelectListView
 
       @selectItemView @list.find('li:first')
     else
-      @setError @getEmptyMessage(@items.length, viewItems.length)
+      @setError @getEmptyMessage(@items.length, scoredCandidates.length)
 
 
   viewForItem: (item) ->
