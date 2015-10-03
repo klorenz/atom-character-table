@@ -1,7 +1,7 @@
 {
   "name": "character-table",
   "main": "./lib/character-table",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Insert a character from a (almost) complete Unicode Character Table or use vim digraph style to insert it.",
   "repository": "https://github.com/klorenz/atom-character-table",
   "license": "MIT",
