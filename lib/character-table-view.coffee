@@ -269,7 +269,7 @@ class CharacterTableView extends SelectListView
     # """
 
   confirmed: (item) ->
-    atom.workspace.getActiveTextEditor().insertText(item.char)
+    atom.workspace.getActiveTextEditor().insertText(item.candidate.char)
     @cancelled()
 
   cancelled: ->
@@ -296,7 +296,6 @@ class CharacterTableView extends SelectListView
     @storeFocusedElement()
 
     @focusFilterEditor()
-    debugger
 
 
   hide: ->
