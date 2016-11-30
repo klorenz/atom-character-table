@@ -18,6 +18,12 @@
     "mnemonic",
     "digraph"
   ],
+  "activationCommands": {
+    "atom-workspace": [
+      "character-table:toggle",
+      "character-table:show-enabled-mnemonics"
+    ]
+  },
   "dependencies": {
     "atom-space-pen-views": ">=2.0.0",
     "fuzzaldrin": "^2.1.0",

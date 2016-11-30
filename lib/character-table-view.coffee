@@ -277,12 +277,14 @@ class CharacterTableView extends SelectListView
     @restoreFocus()
 
   showMnemonics: ->
-    @setItems @characterData.getMnemonics()
-    @show()
+    @characterData.initialized.then =>
+      @setItems @characterData.getMnemonics()
+      @show()
 
   showAll: ->
-    @setItems @characterData.getAll()
-    @show()
+    @characterData.initialized.then =>
+      @setItems @characterData.getAll()
+      @show()
 
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
