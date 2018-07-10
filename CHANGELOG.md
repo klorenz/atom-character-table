@@ -1,3 +1,8 @@
+
+## x.x.x - Miscellaneous
+* delaying package activation until actual usage
+* update of UnicodeData.txt to Unicode v11.0 version (2018)
+
 ## 0.4.0 - Improve fuzzy search
 * Visualize matched chars, search within fields
 
