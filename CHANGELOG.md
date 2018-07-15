@@ -1,5 +1,5 @@
 
-## 0.1.0 - FORK to atom-character-table-plus 
+## 0.5.0 - FORK to atom-character-table-plus 
 * replacement of "fuzzaldrin" with "fuzzaldrin-plus" library
 * delaying package activation until actual usage
 * update of UnicodeData.txt to Unicode 11.0 version (2018)
