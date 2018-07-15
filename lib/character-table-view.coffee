@@ -1,7 +1,7 @@
 {SelectListView, $} = require "atom-space-pen-views"
 {CompositeDisposable} = require "atom"
 {CharacterData} = require "./character-data.coffee"
-fuzzaldrin = require 'fuzzaldrin'
+fuzzaldrin = require 'fuzzaldrin-plus'
 
 Q = require "q"
 path = require "path"

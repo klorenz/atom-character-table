@@ -1,11 +1,19 @@
-# character-table package
+# character-table-plus package
 
-With character table you can lookup any Unicode Character (except control characters) to insert into your document.
+The character-table-plus package is a fork of the character-table package
+written by [klorenz](https://github.com/klorenz). This fork, made solely to
+include some essential upgrades, may be merged back into the original package
+by its author, or live on independently. There are currently no plans to
+further develop the functionality of the plus package, but pull requests that
+address reproducible bugs are very welcome and will be merged.
+
+With character-table-plus you can lookup any Unicode Character (except control
+characters) to insert into your document.
 
 Hit `alt-l` to open the selection view and then find it either via
 unicode code point or ISO name of the character.
 
-![A screenshot of character table](https://raw.githubusercontent.com/klorenz/atom-character-table/master/character-table.png)
+![A screenshot of character table](https://raw.githubusercontent.com/threadless-screw/atom-character-table-plus/master/character-table.png)
 
 
 ## Character Mnemonics or Vim-like digraph support
@@ -57,4 +65,4 @@ Technically `latin diaresis, arrow` is translated into `latin.*diaresis|arrow`.
 
 ### Allow Reversed Mnemonics
 
-From Vim I am used to `ctrl-k : a` for inserting
+From Vim I am used to `ctrl-k : a` for inserting.
